@@ -1,0 +1,35 @@
+{
+  "name": "@estacionamento-sys/api",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "default": "./src/*.ts"
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsdown"
+  },
+  "devDependencies": {
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@orpc/server": "catalog:",
+    "@orpc/client": "catalog:",
+    "@orpc/openapi": "catalog:",
+    "@orpc/zod": "catalog:",
+    "hono": "catalog:",
+    "@prisma/client": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:",
+    "@estacionamento-sys/auth": "workspace:*",
+    "@estacionamento-sys/db": "workspace:*"
+  }
+}
