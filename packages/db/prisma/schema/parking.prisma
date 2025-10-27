@@ -1,0 +1,9 @@
+model ParkingSpace {
+  id        Int      @id @default(autoincrement())
+  numero    String
+  status    String   @default("livre")
+  tipo      String   @default("carro")
+  criadoEm  DateTime @default(now())
+
+  @@map("parking_spaces")
+}

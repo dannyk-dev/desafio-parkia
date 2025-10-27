@@ -39,6 +39,7 @@
     "db:down": "turbo -F @estacionamento-sys/db db:down"
   },
   "dependencies": {
+    "@orpc/experimental-publisher": "^1.10.2",
     "dotenv": "^17.2.2",
     "zod": "^4.1.11"
   },

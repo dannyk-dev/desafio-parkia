@@ -8,6 +8,9 @@
     "./*": {
       "types": "./dist/*.d.ts",
       "default": "./src/*.ts"
+    },
+    "./realtime": {
+      "default": "./src/realtime/index.ts"
     }
   },
   "type": "module",
