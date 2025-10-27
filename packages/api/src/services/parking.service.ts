@@ -17,6 +17,7 @@ export class ParkingService {
   async create(data: { numero: string; status?: "livre" | "ocupada"; tipo?: "carro" | "moto" | "deficiente" }) {
     const exists = await prisma.parkingSpace.findFirst({ where: { numero: data.numero } });
     if (exists) throw new Error("numero_already_exists");
+
     const created = await prisma.parkingSpace.create({
       data: { numero: data.numero, status: data.status ?? "livre", tipo: data.tipo ?? "carro" },
     });

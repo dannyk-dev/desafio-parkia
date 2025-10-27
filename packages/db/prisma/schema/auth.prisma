@@ -8,6 +8,7 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  role         Role      @default(USER)
 
   @@unique([email])
   @@map("user")
@@ -56,4 +57,9 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+enum Role {
+  ADMIN
+  USER
 }

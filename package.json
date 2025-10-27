@@ -32,6 +32,7 @@
     "db:push": "turbo -F @estacionamento-sys/db db:push",
     "db:studio": "turbo -F @estacionamento-sys/db db:studio",
     "db:generate": "turbo -F @estacionamento-sys/db db:generate",
+    "db:drop": "turbo -F @estacionamento-sys/db db:drop",
     "db:migrate": "turbo -F @estacionamento-sys/db db:migrate",
     "db:start": "turbo -F @estacionamento-sys/db db:start",
     "db:watch": "turbo -F @estacionamento-sys/db db:watch",

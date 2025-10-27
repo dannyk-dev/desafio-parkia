@@ -1,10 +1,21 @@
-import AdminEditor from "@/components/AdminEditor";
-export default function Route() {
-  // proteja com seu guard de sessão/role no loader/layout
+import AuthGuard from "@/components/guards/auth-guard";
+import { AddParkingSpace, AdminParkingSpaceGrid } from "@/features/parking-space";
+
+type Props = {};
+
+const AdminPage = (props: Props) => {
   return (
-    <main className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Admin - Vagas</h1>
-      <AdminEditor />
-    </main>
+    <AuthGuard>
+      <div className="flex flex-col py-10 px-6">
+        <div className="w-full flex items-center justify-between">
+          <h1 className="text-2xl font-semibold">Parking Management</h1>
+
+          <AddParkingSpace />
+        </div>
+        <AdminParkingSpaceGrid />
+      </div>
+    </AuthGuard>
   );
-}
+};
+
+export default AdminPage;
