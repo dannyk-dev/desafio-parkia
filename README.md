@@ -2,7 +2,7 @@
 
 [Vídeo de Demonstração](https://drive.google.com/file/d/1Wb7BhyuvKTsLVcfYQAcJMr6FiWXt-lSi/view?usp=sharing)
 
-## Funcionalidades
+## Stack
 
 - **TypeScript** - Para segurança de tipos e melhor experiência do desenvolvedor
 - **React Router** - Roteamento declarativo para React
