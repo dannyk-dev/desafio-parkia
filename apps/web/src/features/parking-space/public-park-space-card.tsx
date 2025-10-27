@@ -9,7 +9,6 @@ type Props = {
 };
 
 export default function PublicParkingCard({ numero, tipo, status }: Props) {
-  const statusColor = status === "LIVRE" ? "bg-green-500" : "bg-red-500";
   const statusText = status === "LIVRE" ? "Disponível" : "Ocupada";
 
   return (
@@ -21,12 +20,10 @@ export default function PublicParkingCard({ numero, tipo, status }: Props) {
             {tipo}
           </Badge>
         </CardTitle>
-        <CardDescription className="flex items-center gap-2">
-          <span className={`inline-block h-2.5 w-2.5 rounded-full ${statusColor}`} />
-          <span className={status === "LIVRE" ? "text-green-700" : "text-red-700"}>{statusText}</span>
-        </CardDescription>
       </CardHeader>
-      <CardContent></CardContent>
+      <CardContent>
+        <Badge variant={status === "LIVRE" ? "success" : "destructive"}>{statusText}</Badge>
+      </CardContent>
     </Card>
   );
 }

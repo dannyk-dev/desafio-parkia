@@ -17,7 +17,7 @@ const AdminPage = (props: Props) => {
           <AddParkingSpace />
         </div>
         <AdminParkingSpaceGrid />
-        <section className="rounded-lg border p-4 mt-auto">
+        <section className="rounded-lg border p-4 mt-auto sticky left-0 bottom-0 right-0">
           <h2 className="mb-2 font-medium">API Status</h2>
           <div className="flex items-center gap-2">
             <div className={`h-2 w-2 rounded-full ${healthCheck.data ? "bg-green-500" : "bg-red-500"}`} />

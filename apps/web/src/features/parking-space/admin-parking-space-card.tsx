@@ -77,7 +77,7 @@ export default function AdminParkingCard({ space, onEdit }: Props) {
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="min-w-60">
+            <DropdownMenuContent align="end" className="min-w-52">
               {onEdit && (
                 <DropdownMenuItem onClick={() => onEdit(space)} disabled={isPending}>
                   <Pencil className="mr-2 h-4 w-4" />
@@ -91,7 +91,7 @@ export default function AdminParkingCard({ space, onEdit }: Props) {
                   </>
                 ) : (
                   <>
-                    Marcar como <Badge variant="default">LIVRE</Badge>
+                    Marcar como <Badge variant="success">LIVRE</Badge>
                   </>
                 )}
               </DropdownMenuItem>
@@ -117,7 +117,7 @@ export default function AdminParkingCard({ space, onEdit }: Props) {
               </DropdownMenuSub>
 
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={remove} className="text-red-600 focus:text-red-700" disabled={isPending}>
+              <DropdownMenuItem onClick={remove} variant="destructive" disabled={isPending}>
                 <Trash2 className="mr-2 h-4 w-4" />
                 Remover
               </DropdownMenuItem>
@@ -127,7 +127,7 @@ export default function AdminParkingCard({ space, onEdit }: Props) {
       </CardHeader>
 
       <CardContent>
-        <Badge variant={space.status === "LIVRE" ? "default" : "destructive"}>{statusText}</Badge>
+        <Badge variant={space.status === "LIVRE" ? "success" : "destructive"}>{statusText}</Badge>
       </CardContent>
     </Card>
   );
