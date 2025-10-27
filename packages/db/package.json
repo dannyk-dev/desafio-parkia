@@ -33,6 +33,7 @@
   "dependencies": {
     "@prisma/client": "catalog:",
     "dotenv": "catalog:",
+    "prisma-generator-typescript-interfaces": "^3.1.0",
     "zod": "catalog:"
   }
 }

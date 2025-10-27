@@ -2,7 +2,7 @@ import z from "zod";
 import { protectedProcedure, publicProcedure } from "../index";
 import { parkingService } from "../services/parking.service";
 import { MemoryPublisher } from "@orpc/experimental-publisher/memory";
-import type { TParkingUpdate } from "../schemas/parking";
+import { ParkingSpaceSchema, type TParkingUpdate } from "../schemas/parking";
 import { ORPCError } from "@orpc/server";
 
 const pub = new MemoryPublisher<{ "parking:update": TParkingUpdate }>();
@@ -11,30 +11,22 @@ export const parkingRouter = {
   list: publicProcedure.handler(async () => {
     return await parkingService.list();
   }),
-  create: protectedProcedure
-    .input(
-      z.object({
-        numero: z.string().min(1),
-        status: z.enum(["livre", "ocupada"]).optional(),
-        tipo: z.enum(["carro", "moto", "deficiente"]).optional(),
-      })
-    )
-    .handler(async ({ input, context }) => {
-      if (context.session?.user.role !== "ADMIN") {
-        throw new ORPCError("FORBIDDEN", {
-          message: "You do not have permission to perform this action.",
-        });
-      }
-
-      const newParking = await parkingService.create(input);
-
-      pub.publish("parking:update", {
-        type: "created",
-        item: newParking,
+  create: protectedProcedure.input(ParkingSpaceSchema).handler(async ({ input, context }) => {
+    if (context.session?.user.role !== "ADMIN") {
+      throw new ORPCError("FORBIDDEN", {
+        message: "You do not have permission to perform this action.",
       });
+    }
 
-      return newParking;
-    }),
+    const newParking = await parkingService.create(input);
+
+    pub.publish("parking:update", {
+      type: "created",
+      item: newParking,
+    });
+
+    return newParking;
+  }),
   update: protectedProcedure
     .input(
       z.object({

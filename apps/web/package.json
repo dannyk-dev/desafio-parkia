@@ -45,6 +45,7 @@
   "devDependencies": {
     "@react-router/dev": "^7.6.1",
     "@tailwindcss/vite": "^4.1.8",
+    "@tanstack/react-query-devtools": "^5.85.5",
     "@types/node": "^20",
     "@types/react": "~19.1.10",
     "@types/react-dom": "^19.0.4",
@@ -52,7 +53,6 @@
     "tailwindcss": "^4.1.8",
     "typescript": "catalog:",
     "vite": "^6.3.5",
-    "vite-tsconfig-paths": "^5.1.4",
-    "@tanstack/react-query-devtools": "^5.85.5"
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }

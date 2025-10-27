@@ -1,4 +1,5 @@
 import z from "zod";
+import { parkingStatusEnum, parkingTypeEnum } from "./enums.schema";
 
 export const ParkingUpdate = z.discriminatedUnion("type", [
   z.object({
@@ -6,8 +7,8 @@ export const ParkingUpdate = z.discriminatedUnion("type", [
     item: z.object({
       id: z.number().int().positive(),
       numero: z.string().min(1).max(8),
-      status: z.enum(["livre", "ocupada"]),
-      tipo: z.enum(["carro", "moto", "deficiente"]),
+      status: parkingStatusEnum,
+      tipo: parkingTypeEnum,
       criadoEm: z.coerce.date(),
     }),
   }),
@@ -16,8 +17,8 @@ export const ParkingUpdate = z.discriminatedUnion("type", [
     item: z.object({
       id: z.number().int().positive(),
       numero: z.string().min(1).max(8),
-      status: z.enum(["livre", "ocupada"]),
-      tipo: z.enum(["carro", "moto", "deficiente"]),
+      status: parkingStatusEnum,
+      tipo: parkingTypeEnum,
       criadoEm: z.coerce.date(),
     }),
   }),

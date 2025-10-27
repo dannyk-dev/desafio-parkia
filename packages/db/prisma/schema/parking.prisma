@@ -1,9 +1,24 @@
+generator parkingInterfaces {
+  provider = "prisma-generator-typescript-interfaces"
+}
+
 model ParkingSpace {
   id        Int      @id @default(autoincrement())
   numero    String
-  status    String   @default("livre")
-  tipo      String   @default("carro")
+  status    ParkingStatus @default(LIVRE)
+  tipo      ParkingType   @default(CARRO)
   criadoEm  DateTime @default(now())
 
   @@map("parking_spaces")
+}
+
+enum ParkingStatus {
+  LIVRE
+  OCUPADA
+}
+
+enum ParkingType {
+  CARRO
+  MOTO
+  DEFICIENTE
 }

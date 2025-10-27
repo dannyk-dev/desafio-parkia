@@ -9,8 +9,11 @@
       "types": "./dist/*.d.ts",
       "default": "./src/*.ts"
     },
-    "./realtime": {
-      "default": "./src/realtime/index.ts"
+    "./interfaces": {
+      "default": "./src/interfaces/index.ts"
+    },
+    "./schemas": {
+      "default": "./src/schemas/index.ts"
     }
   },
   "type": "module",

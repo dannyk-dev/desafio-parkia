@@ -6,12 +6,14 @@ import ParkingSpaceForm from "./parking-form";
 import type { ParkingSpaceValues } from "./schemas";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import type { TParkingSpaceSchema } from "@estacionamento-sys/api/schemas/parking/index";
 
 const AddParkingSpace = () => {
   const [openState, setOpenState] = useState(false);
   const { mutateAsync, isPending } = useMutation(orpc.parkingSpace.create.mutationOptions());
 
-  const handleMutation = async (values: ParkingSpaceValues) => {
+  const handleMutation = async (values: TParkingSpaceSchema) => {
+    console.log(values);
     await mutateAsync(values, {
       onSuccess: () => {
         toast.success("Vaga criada com sucesso!");

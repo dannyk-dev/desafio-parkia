@@ -1,5 +1,4 @@
 import * as React from "react";
-import { z } from "zod";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -7,12 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ParkingSpaceSchema, type ParkingSpaceValues } from "./schemas";
+import { ParkingSpaceSchema, type TParkingSpaceSchema } from "@estacionamento-sys/api/schemas/parking/index";
 
 export type ParkingSpaceFormProps = {
   mode: "create" | "edit";
-  initialValues?: Partial<ParkingSpaceValues>;
-  onSubmit: (values: ParkingSpaceValues) => Promise<void> | void;
+  initialValues?: Partial<TParkingSpaceSchema>;
+  onSubmit: (values: TParkingSpaceSchema) => Promise<void> | void;
   disabled?: boolean;
   submitLabel?: string;
   numeroHint?: string;
@@ -28,12 +27,12 @@ export default function ParkingSpaceForm({
   numeroHint,
   className,
 }: ParkingSpaceFormProps) {
-  const form = useForm<ParkingSpaceValues>({
+  const form = useForm<TParkingSpaceSchema>({
     resolver: zodResolver(ParkingSpaceSchema),
     defaultValues: {
       numero: initialValues?.numero ?? "",
-      status: initialValues?.status ?? "livre",
-      tipo: initialValues?.tipo ?? "carro",
+      status: initialValues?.status ?? "LIVRE",
+      tipo: initialValues?.tipo ?? "CARRO",
     },
     mode: "onSubmit",
     reValidateMode: "onChange",
@@ -41,7 +40,6 @@ export default function ParkingSpaceForm({
 
   const isSubmitting = form.formState.isSubmitting || !!disabled;
 
-  // A11y-friendly ids
   const idNumero = React.useId();
   const idStatus = React.useId();
   const idTipo = React.useId();
@@ -50,9 +48,9 @@ export default function ParkingSpaceForm({
     <form
       className={className}
       onSubmit={form.handleSubmit(async (values) => {
+        console.log(values);
         await onSubmit(values);
       })}
-      noValidate
     >
       <FieldGroup>
         <FieldSet>
@@ -93,8 +91,8 @@ export default function ParkingSpaceForm({
                       <SelectValue placeholder="Selecione o status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="livre">livre</SelectItem>
-                      <SelectItem value="ocupada">ocupada</SelectItem>
+                      <SelectItem value="LIVRE">Livre</SelectItem>
+                      <SelectItem value="OCUPADA">Ocupada</SelectItem>
                     </SelectContent>
                   </Select>
                   {form.formState.errors.status ? (
@@ -104,7 +102,6 @@ export default function ParkingSpaceForm({
               )}
             />
 
-            {/* TIPO */}
             <Controller
               control={form.control}
               name="tipo"
@@ -116,9 +113,9 @@ export default function ParkingSpaceForm({
                       <SelectValue placeholder="Selecione o tipo" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="carro">carro</SelectItem>
-                      <SelectItem value="moto">moto</SelectItem>
-                      <SelectItem value="deficiente">deficiente</SelectItem>
+                      <SelectItem value="CARRO">Carro</SelectItem>
+                      <SelectItem value="MOTO">Moto</SelectItem>
+                      <SelectItem value="DEFICIENTE">Deficiente</SelectItem>
                     </SelectContent>
                   </Select>
                   {form.formState.errors.tipo ? (

@@ -1,96 +1,43 @@
-import { orpc } from "@/utils/orpc";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useMemo } from "react";
+import { useParkingLive } from "./hooks/use-live-parking-updates";
+import PublicParkingCard from "./public-park-space-card";
+import type { ParkingSpace } from "@estacionamento-sys/api/interfaces";
 
-type Props = {};
+export default function PublicParkingGrid() {
+  const { list } = useParkingLive();
+  const items = list.data?.items ?? [];
+  const counts = list.data?.counts ?? { LIVRE: 0, OCUPADA: 0 };
 
-const PublicParkingGrid = (props: Props) => {
-  const queryClient = useQueryClient();
-  const listOpts = orpc.parkingSpace.list.queryOptions();
-
-  const { data, isLoading } = useQuery(listOpts);
-  const { data: liveUpdates, isLoading: updating } = useQuery(orpc.parkingSpace.live.experimental_liveOptions());
-
-  useEffect(() => {
-    if (!liveUpdates) return;
-
-    switch (liveUpdates.type) {
-      case "created":
-        queryClient.setQueryData(listOpts.queryKey, (oldData: any) => {
-          if (!oldData) return oldData;
-          return {
-            ...oldData,
-            items: [...oldData.items, liveUpdates.item],
-            counts: {
-              ...oldData.counts,
-              [liveUpdates.item.status]: oldData.counts[liveUpdates.item.status] + 1,
-            },
-          };
-        });
-        break;
-      case "updated":
-        queryClient.setQueryData(listOpts.queryKey, (oldData: any) => {
-          if (!oldData) return oldData;
-          const updatedItems = oldData.items.map((item: any) =>
-            item.id === liveUpdates.item.id ? liveUpdates.item : item
-          );
-
-          const counts = updatedItems.reduce(
-            (acc: any, r: any) => {
-              acc[r.status] = (acc[r.status] ?? 0) + 1;
-              return acc;
-            },
-            { livre: 0, ocupada: 0 }
-          );
-
-          return {
-            ...oldData,
-            items: updatedItems,
-            counts,
-          };
-        });
-        break;
-      case "removed":
-        queryClient.setQueryData(listOpts.queryKey, (oldData: any) => {
-          if (!oldData) return oldData;
-          const filteredItems = oldData.items.filter((item: any) => item.id !== liveUpdates.item.id);
-
-          // Recalculate counts
-          const counts = filteredItems.reduce(
-            (acc: any, r: any) => {
-              acc[r.status] = (acc[r.status] ?? 0) + 1;
-              return acc;
-            },
-            { livre: 0, ocupada: 0 }
-          );
-
-          return {
-            ...oldData,
-            items: filteredItems,
-            counts,
-          };
-        });
-        break;
-      default:
-        break;
-    }
-  }, [liveUpdates]);
+  const summary = useMemo(
+    () => [
+      { label: "Livres", value: counts.LIVRE, className: "text-green-700" },
+      { label: "Ocupadas", value: counts.OCUPADA, className: "text-red-700" },
+    ],
+    [counts]
+  );
 
   return (
-    <div>
-      {isLoading && <p>Loading...</p>}
-      {!isLoading && data && (
-        <ul>
-          {data.items.map((parkingSpace: any) => (
-            <li key={parkingSpace.id}>
-              {parkingSpace.numero} - {parkingSpace.tipo.toUpperCase()}{" "}
-              {/* status will live-update because cache is mutated immutably */}— {parkingSpace.status.toUpperCase()}
-            </li>
-          ))}
-        </ul>
+    <div className="space-y-4">
+      {list.isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          <div className="flex gap-3">
+            {summary.map((s) => (
+              <div key={s.label} className="rounded border px-3 py-2 shadow-sm">
+                <span className="text-sm mr-2">{s.label}:</span>
+                <b className={s.className}>{s.value}</b>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            {items.map((p: ParkingSpace) => (
+              <PublicParkingCard key={p.id} numero={p.numero} tipo={p.tipo} status={p.status} />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
-};
-
-export default PublicParkingGrid;
+}
