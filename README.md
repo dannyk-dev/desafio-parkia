@@ -1,73 +1,107 @@
 # estacionamento-sys
 
-[Video Demo](https://drive.google.com/file/d/1Wb7BhyuvKTsLVcfYQAcJMr6FiWXt-lSi/view?usp=sharing)
+[Vídeo de Demonstração](https://drive.google.com/file/d/1Wb7BhyuvKTsLVcfYQAcJMr6FiWXt-lSi/view?usp=sharing)
 
+## Funcionalidades
 
-## Features
+- **TypeScript** - Para segurança de tipos e melhor experiência do desenvolvedor
+- **React Router** - Roteamento declarativo para React
+- **TailwindCSS** - CSS baseado em utilitários para desenvolvimento rápido de UI
+- **shadcn/ui** - Componentes de UI reutilizáveis
+- **Hono** - Framework de servidor leve e performático
+- **oRPC** - APIs de ponta a ponta com tipagem e integração OpenAPI
+- **Bun** - Ambiente de execução
+- **Prisma** - ORM com TypeScript em primeiro lugar
+- **PostgreSQL** - Mecanismo de banco de dados
+- **Autenticação** - Better-Auth
+- **Biome** - Linting e formatação
+- **Turborepo** - Sistema de monorepo otimizado
 
-- **TypeScript** - For type safety and improved developer experience
-- **React Router** - Declarative routing for React
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **shadcn/ui** - Reusable UI components
-- **Hono** - Lightweight, performant server framework
-- **oRPC** - End-to-end type-safe APIs with OpenAPI integration
-- **Bun** - Runtime environment
-- **Prisma** - TypeScript-first ORM
-- **PostgreSQL** - Database engine
-- **Authentication** - Better-Auth
-- **Biome** - Linting and formatting
-- **Turborepo** - Optimized monorepo build system
+## Primeiros Passos
 
-## Getting Started
-
-First, install the dependencies:
+Primeiro, instale as dependências:
 
 ```bash
+npm install -g bun
 bun install
 ```
 
-## Database Setup
+## Configuração do Banco de Dados
 
-This project uses PostgreSQL with Prisma.
+Este projeto usa PostgreSQL com Prisma.
 
-1. Make sure you have a PostgreSQL database set up.
-2. Update your `apps/server/.env` file with your PostgreSQL connection details.
+1. Certifique-se de ter um banco PostgreSQL configurado. (Dentro de `packages/db` há um `docker-compose.yml` que sobe um banco)
 
-3. Generate the Prisma client and push the schema:
-
-```bash
-bun db:push
+```
+cd packages/db && docker compose up -d --build
 ```
 
-Then, run the development server:
+2. Atualize seu arquivo `apps/server/.env` com os detalhes da conexão do PostgreSQL. (Se você usou o Docker do exemplo acima, este `.env` funcionará instantaneamente)
+
+```
+DATABASE_URL=postgresql://postgres:password@localhost:5432/estacionamento-sys
+BETTER_AUTH_SECRET=QviDmV9Oz3O7bEAjCzBI4vSUF1LcUrdd
+BETTER_AUTH_URL=http://localhost:3000
+CORS_ORIGIN=http://localhost:5173
+```
+
+3. Configure o `.env` do frontend em `apps/web/.env`
+
+```
+VITE_SERVER_URL=http://localhost:3000
+```
+
+4. Gere o cliente do Prisma e envie o schema:
+
+```bash
+bun run db:migrate
+bun run db:push
+```
+
+Em seguida, rode o servidor de desenvolvimento:
 
 ```bash
 bun dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser to see the web application.
-The API is running at [http://localhost:3000](http://localhost:3000).
+Para ver o banco de dados na interface:
 
-## Project Structure
+```bash
+bun run db:studio
+```
+
+Para ver o docs OpenAPI / Scalar Docs, abre o link:
+
+```
+http://localhost:3000/api-reference
+```
+
+Para dar privilégios de admin ao seu usuário:
+[Modifique seu usuário para admin dentro do Prisma Studio](https://github.com/dannyk-dev/desafio-parkia/docs/admin-user.png)
+
+Abra [http://localhost:5173](http://localhost:5173) no navegador para ver a aplicação web.
+A API está rodando em [http://localhost:3000](http://localhost:3000).
+
+## Estrutura do Projeto
 
 ```
 estacionamento-sys/
 ├── apps/
-│   ├── web/         # Frontend application (React + React Router)
-│   └── server/      # Backend API (Hono, ORPC)
+│   ├── web/         # Aplicação frontend (React + React Router)
+│   └── server/      # API backend (Hono, ORPC)
 ├── packages/
-│   ├── api/         # API layer / business logic
-│   ├── auth/        # Authentication configuration & logic
-│   └── db/          # Database schema & queries
+│   ├── api/         # Camada de API / regras de negócio
+│   ├── auth/        # Configuração e lógica de autenticação
+│   └── db/          # Schema do banco e queries
 ```
 
-## Available Scripts
+## Scripts Disponíveis
 
-- `bun dev`: Start all applications in development mode
-- `bun build`: Build all applications
-- `bun dev:web`: Start only the web application
-- `bun dev:server`: Start only the server
-- `bun check-types`: Check TypeScript types across all apps
-- `bun db:push`: Push schema changes to database
-- `bun db:studio`: Open database studio UI
-- `bun check`: Run Biome formatting and linting
+- `bun dev`: Inicia todas as aplicações em modo de desenvolvimento
+- `bun build`: Compila todas as aplicações
+- `bun dev:web`: Inicia apenas a aplicação web
+- `bun dev:server`: Inicia apenas o servidor
+- `bun check-types`: Verifica os tipos TypeScript em todos os apps
+- `bun db:push`: Envia mudanças do schema para o banco
+- `bun db:studio`: Abre a interface do banco de dados
+- `bun check`: Executa formatação e linting com Biome
