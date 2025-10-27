@@ -77,7 +77,7 @@ http://localhost:3000/api-reference
 ```
 
 Para dar privilégios de admin ao seu usuário:
-[Modifique seu usuário para admin dentro do Prisma Studio](https://github.com/dannyk-dev/desafio-parkia/blob/main/docs/admin-user.png)
+![Modifique seu usuário para admin dentro do Prisma Studio](https://github.com/dannyk-dev/desafio-parkia/blob/main/docs/admin-user.png)
 
 Abra [http://localhost:5173](http://localhost:5173) no navegador para ver a aplicação web.
 A API está rodando em [http://localhost:3000](http://localhost:3000).
