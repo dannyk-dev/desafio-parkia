@@ -54,6 +54,7 @@ export function useParkingLive() {
 
   useEffect(() => {
     if (!live.data) return;
+    console.log(live.data);
 
     const updatedData = applyEvent(list.data, live.data);
     queryClient.setQueryData(listOpts.queryKey, updatedData);

@@ -29,15 +29,13 @@ export const parkingRouter = {
   }),
   update: protectedProcedure
     .input(
-      z.object({
+      ParkingSpaceSchema.omit({ numero: true }).extend({
         id: z.number().int().positive(),
-        numero: z.string().min(1).optional(),
-        status: z.enum(["livre", "ocupada"]).optional(),
-        tipo: z.enum(["carro", "moto", "deficiente"]).optional(),
+        numero: z.string().optional(),
       })
     )
     .handler(async ({ input, context }) => {
-      if (context.session?.user.role !== "admin") {
+      if (context.session?.user.role !== "ADMIN") {
         throw new Error("forbidden");
       }
       const { id, ...patch } = input;
@@ -53,7 +51,7 @@ export const parkingRouter = {
   remove: protectedProcedure
     .input(z.object({ id: z.number().int().positive() }))
     .handler(async ({ input, context }) => {
-      if (context.session?.user.role !== "admin") {
+      if (context.session?.user.role !== "ADMIN") {
         throw new Error("forbidden");
       }
 
