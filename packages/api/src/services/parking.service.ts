@@ -21,7 +21,8 @@ export class ParkingService {
   }
   async create(data: TParkingSpaceSchema): Promise<ParkingSpace> {
     const exists = await prisma.parkingSpace.findFirst({ where: { numero: data.numero } });
-    if (exists) throw new ORPCError("CONFLICT", { message: "Parking space already exists." });
+    console.log(exists);
+    if (exists !== null) throw new ORPCError("CONFLICT", { message: "Parking space already exists." });
 
     const created = await prisma.parkingSpace.create({
       data: { numero: data.numero, status: data.status ?? "LIVRE", tipo: data.tipo ?? "CARRO" },

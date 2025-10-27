@@ -40,7 +40,10 @@
     "db:down": "turbo -F @estacionamento-sys/db db:down"
   },
   "dependencies": {
+    "@orpc/client": "^1.10.2",
     "@orpc/experimental-publisher": "^1.10.2",
+    "@orpc/openapi": "^1.10.2",
+    "@orpc/server": "^1.10.2",
     "dotenv": "^17.2.2",
     "zod": "^4.1.11"
   },

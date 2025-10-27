@@ -2,32 +2,48 @@ import z from "zod";
 import { protectedProcedure, publicProcedure } from "../index";
 import { parkingService } from "../services/parking.service";
 import { MemoryPublisher } from "@orpc/experimental-publisher/memory";
-import { ParkingSpaceSchema, type TParkingUpdate } from "../schemas/parking";
+import { ParkingSpaceResponse, ParkingSpaceSchema, type TParkingUpdate } from "../schemas/parking";
 import { ORPCError } from "@orpc/server";
 
 const pub = new MemoryPublisher<{ "parking:update": TParkingUpdate }>();
 
 export const parkingRouter = {
-  list: publicProcedure.handler(async () => {
-    return await parkingService.list();
-  }),
-  create: protectedProcedure.input(ParkingSpaceSchema).handler(async ({ input, context }) => {
-    if (context.session?.user.role !== "ADMIN") {
-      throw new ORPCError("FORBIDDEN", {
-        message: "You do not have permission to perform this action.",
+  list: publicProcedure
+    .route({
+      method: "GET",
+      path: "/parking",
+    })
+    .output(ParkingSpaceResponse)
+    .handler(async () => {
+      return await parkingService.list();
+    }),
+  create: protectedProcedure
+    .route({
+      method: "POST",
+      path: "/parking",
+    })
+    .input(ParkingSpaceSchema)
+    .handler(async ({ input, context }) => {
+      if (context.session?.user.role !== "ADMIN") {
+        throw new ORPCError("FORBIDDEN", {
+          message: "You do not have permission to perform this action.",
+        });
+      }
+
+      const newParking = await parkingService.create(input);
+
+      pub.publish("parking:update", {
+        type: "created",
+        item: newParking,
       });
-    }
 
-    const newParking = await parkingService.create(input);
-
-    pub.publish("parking:update", {
-      type: "created",
-      item: newParking,
-    });
-
-    return newParking;
-  }),
+      return newParking;
+    }),
   update: protectedProcedure
+    .route({
+      method: "PUT",
+      path: "/parking/{id}",
+    })
     .input(
       ParkingSpaceSchema.omit({ numero: true }).extend({
         id: z.number().int().positive(),
@@ -49,6 +65,10 @@ export const parkingRouter = {
       return updatedParking;
     }),
   remove: protectedProcedure
+    .route({
+      method: "DELETE",
+      path: "/parking/{id}",
+    })
     .input(z.object({ id: z.number().int().positive() }))
     .handler(async ({ input, context }) => {
       if (context.session?.user.role !== "ADMIN") {
@@ -63,11 +83,16 @@ export const parkingRouter = {
 
       return removedParking;
     }),
-  live: publicProcedure.handler(async function* ({ input, signal, lastEventId }) {
-    const iterator = pub.subscribe("parking:update", { signal, lastEventId });
+  live: publicProcedure
+    .route({
+      method: "GET",
+      path: "/parking/live",
+    })
+    .handler(async function* ({ input, signal, lastEventId }) {
+      const iterator = pub.subscribe("parking:update", { signal, lastEventId });
 
-    for await (const update of iterator) {
-      yield update;
-    }
-  }),
+      for await (const update of iterator) {
+        yield update;
+      }
+    }),
 };
