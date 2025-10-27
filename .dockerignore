@@ -1,0 +1,14 @@
+.git
+.gitignore
+.vscode
+.DS_Store
+node_modules
+**/node_modules
+dist
+build
+coverage
+playwright-report
+test-results
+.env*
+*.log
+
